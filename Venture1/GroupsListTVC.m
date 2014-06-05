@@ -22,6 +22,7 @@
     [super viewDidAppear:animated];
     UIEdgeInsets inset = UIEdgeInsetsMake(30, 0, 0, 0);
     self.tableView.contentInset = inset;
+    self.title = @"Groups";
     
     VentureDatabase *ventureDb = [VentureDatabase sharedDefaultVentureDatabase];
     if (ventureDb.managedObjectContext) {
