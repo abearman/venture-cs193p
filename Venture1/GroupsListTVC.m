@@ -71,22 +71,27 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Group Cell" forIndexPath:indexPath];
-    
     Group *group = [self.fetchedResultsController objectAtIndexPath:indexPath]; // Retrieves the Region object at this row
     
     cell.textLabel.text = group.name;
+    cell.textLabel.textAlignment = UITextAlignmentCenter;
     
     return cell;
 }
 
-- (IBAction)createNewGroup:(UIButton *)sender {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    NSString *groupName = cell.textLabel.text;
+    NSLog(@"%@", groupName);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ChangedGroup" object:groupName];
+}
+
+- (IBAction)createNewGroup:(UIBarButtonItem *)sender {
     NSLog(@"Create new group");
     
     // Send notification to central view
     [[NSNotificationCenter defaultCenter] postNotificationName:@"CreateGroup" object:self];
-    
-    //UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"Create Group"];
-    //[self.navigationController pushViewController:vc animated:NO];
 }
 
 

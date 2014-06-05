@@ -37,13 +37,26 @@
     [self setUpNavigationBar];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveTestNotification:)
+                                             selector:@selector(createGroup:)
                                                  name:@"CreateGroup"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(changedGroup:)
+                                                 name:@"ChangedGroup"
+                                               object:nil];
+    
     [self setUpAddMembersView];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
+    [self.groupName setBackgroundColor:[UIColor clearColor]];
+    if ([self.groupName.text isEqualToString:@""]) {
+        self.groupName.enabled = YES;
+    } else {
+        self.groupName.enabled = NO;
+    }
+    
     VentureDatabase *ventureDb = [VentureDatabase sharedDefaultVentureDatabase];
     if (ventureDb.managedObjectContext) {
         self.managedObjectContext = ventureDb.managedObjectContext;
@@ -72,21 +85,35 @@
     [self.addMembersView.layer setBorderWidth:0.5f];
 }
 
-- (void) receiveTestNotification:(NSNotification *) notification {
+- (void) unrollCenterView {
+    // Unroll the groups list view
+    self.leftView.hidden = NO;
+    self.rightView.hidden = YES;
+    
+    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         self.centerView.frame = CGRectMake(0.0, self.centerView.frame.origin.y, self.centerView.frame.size.width, self.centerView.frame.size.height);
+                     }
+                     completion:^(BOOL finished) {
+                         [self.groupName becomeFirstResponder];
+                     }];
+}
+
+- (void) changedGroup:(NSNotification *)notification{
+    if ([[notification name] isEqualToString:@"ChangedGroup"]) {
+        self.groupName.text = [notification object];
+        self.groupName.enabled = NO; // Set the group title to be non-editable
+        [self unrollCenterView];
+        
+        // Load group conversation
+    }
+}
+
+- (void) createGroup:(NSNotification *)notification {
     if ([[notification name] isEqualToString:@"CreateGroup"]) {
-        NSLog (@"Successfully received the test notification!");
-        
-        // Unroll the groups list view
-        self.leftView.hidden = NO;
-        self.rightView.hidden = YES;
-        
-        [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             self.centerView.frame = CGRectMake(0.0, self.centerView.frame.origin.y, self.centerView.frame.size.width, self.centerView.frame.size.height);
-                         }
-                         completion:^(BOOL finished) {
-                             [self.groupName becomeFirstResponder];
-                         }];
+        self.groupName.text = @"";
+        self.groupName.enabled = YES; // Set the group title to be editable
+        [self unrollCenterView];
         self.addMembersView.hidden = YES;
     }
 }
