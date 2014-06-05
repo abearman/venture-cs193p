@@ -10,9 +10,10 @@
 #import <AddressBookUI/AddressBookUI.h>
 #import "VentureAppDelegate.h"
 #import "Group.h"
+#import "Person.h"
 #import "VentureDatabase.h"
 
-@interface GroupVC() <FBFriendPickerDelegate, UITextFieldDelegate>
+@interface GroupVC() <FBFriendPickerDelegate, UITextFieldDelegate, ABPeoplePickerNavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *leftView;
 @property (weak, nonatomic) IBOutlet UIView *centerView;
@@ -72,7 +73,56 @@
 }
 
 - (IBAction)addMembers:(UIButton *)sender {
-    NSLog(@"Hello!");
+    ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
+    picker.peoplePickerDelegate = self;
+    
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+# pragma mark People Picker
+
+- (void) addMember:(NSString *)name forGroupName:(NSString *)groupName {
+    // Get the Group the Person belongs to
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+    request.predicate = [NSPredicate predicateWithFormat:@"name = %@", groupName];
+    NSError *error1;
+    NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error1];
+    
+    // Create the Person object to add to the Group
+    Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
+    person.name = name;
+    Group *group = [groups firstObject];
+    NSString *foundGroupName = group.name;
+    person.groups = [[NSSet alloc] initWithObjects:[groups firstObject], nil];
+    
+    NSError *error2;
+    if (![self.managedObjectContext save:&error2]) {
+        NSLog(@"Whoops, couldn't save: %@", [error2 localizedDescription]);
+    } else {
+        NSLog(@"Successfully saved Person with name %@", person.name);
+    }
+}
+
+- (void)peoplePickerNavigationControllerDidCancel: (ABPeoplePickerNavigationController *)peoplePicker {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
+      shouldContinueAfterSelectingPerson:(ABRecordRef)person {
+    
+    NSString *name = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+    NSLog(@"%@", name);
+    [self addMember:name forGroupName:self.groupName.text];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return NO;
+}
+
+- (BOOL)peoplePickerNavigationController: (ABPeoplePickerNavigationController *)peoplePicker
+      shouldContinueAfterSelectingPerson:(ABRecordRef)person
+                                property:(ABPropertyID)property
+                              identifier:(ABMultiValueIdentifier)identifier {
+    return NO;
 }
 
 - (void) setUpAddMembersView {
@@ -99,12 +149,15 @@
                      }];
 }
 
-- (void) changedGroup:(NSNotification *)notification{
+- (void) changedGroup:(NSNotification *)notification {
     if ([[notification name] isEqualToString:@"ChangedGroup"]) {
+        NSLog(@"Received notification to change group");
+        
         self.groupName.text = [notification object];
         self.groupName.enabled = NO; // Set the group title to be non-editable
         [self unrollCenterView];
         
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:self.groupName.text];
         // Load group conversation
     }
 }
@@ -115,6 +168,7 @@
         self.groupName.enabled = YES; // Set the group title to be editable
         [self unrollCenterView];
         self.addMembersView.hidden = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:self.groupName.text];
     }
 }
 

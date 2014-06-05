@@ -409,6 +409,16 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IoN-hP-Ucf" userLabel="Right">
                                 <rect key="frame" x="35" y="0.0" width="285" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <containerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kCc-G2-RiE">
+                                        <rect key="frame" x="0.0" y="0.0" width="285" height="568"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <segue destination="DLc-PT-dlg" kind="embed" identifier="Members List" id="hEt-8A-aYj"/>
+                                        </connections>
+                                    </containerView>
+                                </subviews>
                                 <color key="backgroundColor" red="1" green="0.55206857170000001" blue="0.071089166080000002" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="450-5Q-Ihq" userLabel="Left">
@@ -420,7 +430,7 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <connections>
-                                            <segue destination="LxF-3h-fIU" kind="embed" id="1Xr-0H-tlS"/>
+                                            <segue destination="LxF-3h-fIU" kind="embed" identifier="Group List" id="1Xr-0H-tlS"/>
                                         </connections>
                                     </containerView>
                                 </subviews>
@@ -477,7 +487,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="nJ4-E9-I02">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" image="75E298AA-B606-4759-813D-4F158290A1C0" id="fsV-Dj-2EC">
+                        <barButtonItem key="leftBarButtonItem" image="A349E568-E670-438D-A132-0B152FA4FE32" id="fsV-Dj-2EC">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Create Group" textAlignment="center" minimumFontSize="17" id="fmz-dY-xH5">
@@ -555,7 +565,35 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xAg-Bs-7Lj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1126" y="-480"/>
+            <point key="canvasLocation" x="-1097" y="-408"/>
+        </scene>
+        <!--Members ListTVC-->
+        <scene sceneID="Mpk-WC-6X2">
+            <objects>
+                <tableViewController id="DLc-PT-dlg" customClass="MembersListTVC" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="hUw-0V-1n7">
+                        <rect key="frame" x="0.0" y="0.0" width="285" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Person Cell" id="msb-SU-MWw">
+                                <rect key="frame" x="0.0" y="55" width="285" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="msb-SU-MWw" id="qgY-e5-XVZ">
+                                    <rect key="frame" x="0.0" y="0.0" width="285" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="DLc-PT-dlg" id="kCh-HB-cMU"/>
+                            <outlet property="delegate" destination="DLc-PT-dlg" id="GP5-dt-HWJ"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WXe-Ga-KbE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-682" y="-473"/>
         </scene>
         <!--Facebook LoginVC-->
         <scene sceneID="S98-gU-eEH">
@@ -600,11 +638,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PGQ-Da-G4P" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1400" y="294"/>
+            <point key="canvasLocation" x="-1144" y="322"/>
         </scene>
     </scenes>
     <resources>
-        <image name="75E298AA-B606-4759-813D-4F158290A1C0" width="32" height="32">
+        <image name="A349E568-E670-438D-A132-0B152FA4FE32" width="32" height="32">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPj9YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQsLzI4O1UkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
