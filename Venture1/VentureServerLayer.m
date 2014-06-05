@@ -48,6 +48,38 @@
     return NULL;
 }
 
+-(void)getGroups:(void (^)(NSMutableDictionary *))callback {
+    [self makeCallToVentureServer:@"/user-groups" callback:callback];
+}
+
+-(void)createGroup:(NSString*)groupName {
+    NSDictionary *data = @{
+        @"group" : groupName
+    };
+    [self makeCallToVentureServer:@"/create-group" additionalData:data];
+}
+
+-(void)sendMessage:(NSString*)message toGroup:(NSString*)groupName {
+    NSDictionary *data = @{
+        @"group" : groupName,
+        @"message" : message
+    };
+    [self makeCallToVentureServer:@"/chat" additionalData:data];
+}
+
+-(void)addFacebookFriend:(NSString*)fbid toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback {
+    NSDictionary *data = @{
+        @"group" : groupName,
+        @"fbid" : fbid
+    };
+    [self makeCallToVentureServer:@"/add-facebook-friend" additionalData:data callback:^(NSMutableDictionary *response) {
+        if ([response objectForKey:@"status"] != nil && [[response objectForKey:@"status"] isEqualToString:@"success"]) {
+            callback(true);
+        }
+        else callback(false);
+    }];
+}
+
 -(void)getNewAdventureSuggestion:(void (^)(NSMutableDictionary *))callback {
     [self makeCallToVentureServer:@"/get-suggestion" callback:^(NSMutableDictionary *adventure) {
         if (adventure != nil) {

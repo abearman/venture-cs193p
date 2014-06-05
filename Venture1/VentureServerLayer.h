@@ -21,5 +21,9 @@
 -(void)rateAdventure:(int)adventureId rating:(int)rating;
 -(void)associateFacebook:(NSString*)fuid;
 -(void)submitAdventure:(NSDictionary *)adventure;
+-(void)getGroups:(void (^)(NSMutableDictionary *))callback;
+-(void)createGroup:(NSString*)groupName;
+-(void)sendMessage:(NSString*)message toGroup:(NSString*)groupName;
+-(void)addFacebookFriend:(NSString*)fbid toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback;
 
 @end
