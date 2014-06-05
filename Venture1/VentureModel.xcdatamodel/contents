@@ -7,6 +7,7 @@
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="sender" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" syncable="YES"/>
     </entity>
     <entity name="Person" representedClassName="Person" syncable="YES">
@@ -17,7 +18,7 @@
     </entity>
     <elements>
         <element name="Group" positionX="-92" positionY="-136" width="128" height="88"/>
-        <element name="Message" positionX="162" positionY="186" width="128" height="73"/>
+        <element name="Message" positionX="162" positionY="186" width="128" height="28"/>
         <element name="Person" positionX="358" positionY="-186" width="128" height="103"/>
     </elements>
 </model>
