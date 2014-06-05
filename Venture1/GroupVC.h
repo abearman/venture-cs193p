@@ -9,5 +9,6 @@
 @interface GroupVC : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *personIcon;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import "GroupsListTVC.h"
+#import "Group.h"
+#import "VentureDatabase.h"
 
 @interface GroupsListTVC () <UITableViewDelegate, UITableViewDataSource>
 
@@ -16,29 +18,63 @@
 
 @implementation GroupsListTVC
 
-- (void)viewDidLoad {
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     UIEdgeInsets inset = UIEdgeInsetsMake(30, 0, 0, 0);
     self.tableView.contentInset = inset;
+    
+    VentureDatabase *ventureDb = [VentureDatabase sharedDefaultVentureDatabase];
+    if (ventureDb.managedObjectContext) {
+        self.managedObjectContext = ventureDb.managedObjectContext;
+    } else {
+        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:VentureDatabaseAvailable
+                                                                        object:ventureDb
+                                                                         queue:[NSOperationQueue mainQueue]
+                                                                    usingBlock:^(NSNotification *note) {
+                                                                        self.managedObjectContext = ventureDb.managedObjectContext;
+                                                                        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+                                                                    }];
+    }
 }
+
+- (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    _managedObjectContext = managedObjectContext;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDataModelChange:) name:NSManagedObjectContextObjectsDidChangeNotification object:self.managedObjectContext];
+    
+    [self setupFetchedResultsController];
+}
+
+- (void)setupFetchedResultsController {
+    if (self.managedObjectContext) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+        request.predicate = nil; // Because we want ALL Regions
+        
+        NSSortDescriptor *nameSorter = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
+        request.sortDescriptors = [NSArray arrayWithObjects:nameSorter, nil];
+        
+        self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                            managedObjectContext:self.managedObjectContext
+                                                                              sectionNameKeyPath:nil
+                                                                                       cacheName:nil];
+    } else {
+        self.fetchedResultsController = nil;
+    }
+}
+
+- (void)handleDataModelChange:(NSNotification *)notification {
+    [super performFetch];
+}
+
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell;
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Group Cell" forIndexPath:indexPath];
     
-    if (indexPath.row == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"Create New Group" forIndexPath:indexPath];
-    } else {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"Group" forIndexPath:indexPath];
-    }
+    Group *group = [self.fetchedResultsController objectAtIndexPath:indexPath]; // Retrieves the Region object at this row
+    
+    cell.textLabel.text = group.name;
     
     return cell;
 }

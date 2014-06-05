@@ -8,6 +8,9 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
+#import "VentureAppDelegate.h"
+#import "Group.h"
+#import "VentureDatabase.h"
 
 @interface GroupVC() <FBFriendPickerDelegate, UITextFieldDelegate>
 
@@ -19,9 +22,15 @@
 @property (weak, nonatomic) IBOutlet UIView *addMembersView;
 @property (weak, nonatomic) IBOutlet UIButton *addMembersButton;
 
+@property (strong, nonatomic) NSManagedObjectContext *context;
+@property (strong, nonatomic) UIManagedDocument *document;
+
 @end
 
 @implementation GroupVC
+
+@synthesize context;
+@synthesize document;
 
 - (void) viewDidLoad {
     [self setUpGestureRecognizers];
@@ -34,6 +43,21 @@
     [self setUpAddMembersView];
 }
 
+- (void) viewDidAppear:(BOOL)animated {
+    VentureDatabase *ventureDb = [VentureDatabase sharedDefaultVentureDatabase];
+    if (ventureDb.managedObjectContext) {
+        self.managedObjectContext = ventureDb.managedObjectContext;
+    } else {
+        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:VentureDatabaseAvailable
+                                                                        object:ventureDb
+                                                                         queue:[NSOperationQueue mainQueue]
+                                                                    usingBlock:^(NSNotification *note) {
+                                                                        self.managedObjectContext = ventureDb.managedObjectContext;
+                                                                        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+                                                                    }];
+    }
+}
+
 - (IBAction)addMembers:(UIButton *)sender {
     NSLog(@"Hello!");
 }
@@ -41,7 +65,7 @@
 - (void) setUpAddMembersView {
     // border radius
     [self.addMembersView.layer setCornerRadius:20.0f];
-    [self.addMembersButton.layer setCornerRadius:8.0f];
+    [self.addMembersButton.layer setCornerRadius:10.0f];
     
     // border
     [self.addMembersView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
@@ -67,6 +91,18 @@
     }
 }
 
+
+- (void)createGroupWithName:(NSString *)name {
+    Group *group = [NSEntityDescription insertNewObjectForEntityForName:@"Group" inManagedObjectContext:self.managedObjectContext];
+    group.name = name;
+    NSError *error;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+    } else {
+        NSLog(@"Successfully saved group with name %@", group.name);
+    }
+}
+
 #pragma mark - UITextField Delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -81,6 +117,7 @@
                      completion:nil];
     
     [textField resignFirstResponder];
+    [self createGroupWithName:textField.text];
     return YES;
 }
 

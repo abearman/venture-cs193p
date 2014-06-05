@@ -9,6 +9,7 @@
 #import "VentureAppDelegate.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import "VentureMasterViewController.h"
+#import "Group.h"
 
 @implementation VentureAppDelegate
 
@@ -19,6 +20,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [FBProfilePictureView class];
+    
     return YES;
 }
 							

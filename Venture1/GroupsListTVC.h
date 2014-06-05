@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CoreDataTableViewController.h"
 
-@interface GroupsListTVC : UITableViewController
+@interface GroupsListTVC : CoreDataTableViewController
+
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext; // Shows all Group's in a given context
 
 @end
