@@ -16,7 +16,7 @@
 
 @property (nonatomic, strong) NSString *currentGroupName;
 
-@end 
+@end
 
 @implementation MembersListTVC
 
