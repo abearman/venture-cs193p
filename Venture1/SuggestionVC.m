@@ -30,6 +30,7 @@
 
 /* UI Outlets */
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *transportIcon;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 @property (weak, nonatomic) IBOutlet UIScrollView *activityView;
 
@@ -203,7 +204,18 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSLog(@"You have pressed the %@ button", [actionSheet buttonTitleAtIndex:buttonIndex]);
-    if (buttonIndex < 4) self.modeOfTransportation = buttonIndex;
+    if (buttonIndex < 4) {
+        self.modeOfTransportation = buttonIndex;
+        if (self.modeOfTransportation == 0) {         // Walking
+            self.transportIcon.image = [UIImage imageNamed:@"walk"];
+        } else if (self.modeOfTransportation == 1) {  // Biking
+            self.transportIcon.image = [UIImage imageNamed:@"bicycle"];
+        } else if (self.modeOfTransportation == 2) {  // Driving
+            self.transportIcon.image = [UIImage imageNamed:@"drive"];
+        } else {                                      // Public transport
+            self.transportIcon.image = [UIImage imageNamed:@"bus"];
+        }
+    }
 }
 
 -(void)getNewActivity:(int)indexOfTransport atFeeling:(int)indexOfFeeling {
