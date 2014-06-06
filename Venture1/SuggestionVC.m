@@ -64,7 +64,8 @@
     self.locationTracker = [[VentureLocationTracker alloc] init];
     self.serverLayer = [[VentureServerLayer alloc] initWithLocationTracker:self.locationTracker];
 
-    self.modeOfTransportation = self.activityType = 0;
+    self.modeOfTransportation = 2;
+    self.activityType = 0;
 
     [self setUpNavigationBar];
     [self setUpSearchBar];
