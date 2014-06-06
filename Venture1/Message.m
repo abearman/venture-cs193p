@@ -7,15 +7,11 @@
 //
 
 #import "Message.h"
-#import "Group.h"
-#import "Person.h"
 
 
 @implementation Message
 
 @dynamic message;
 @dynamic timestamp;
-@dynamic sender;
-@dynamic group;
 
 @end

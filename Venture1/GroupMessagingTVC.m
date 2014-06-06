@@ -8,6 +8,7 @@
 
 #import "GroupMessagingTVC.h"
 #import "VentureDatabase.h"
+#import "Message.h"
 
 @interface GroupMessagingTVC () <UITableViewDelegate, UITableViewDataSource>
 
@@ -17,7 +18,7 @@
 
 @implementation GroupMessagingTVC
 
-- (void)viewDidAppear:(BOOL)animated {
+/*- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     UIEdgeInsets inset = UIEdgeInsetsMake(30, 0, 0, 0);
     self.tableView.contentInset = inset;
@@ -64,7 +65,7 @@
         request.predicate = [NSPredicate predicateWithFormat:@"group = %@", self.currentGroupName];
         
         
-        NSSortDescriptor *nameSorter = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
+        NSSortDescriptor *nameSorter = [[NSSortDescriptor alloc] initWithKey:@"sender" ascending:YES selector:@selector(localizedStandardCompare:)];
         request.sortDescriptors = [NSArray arrayWithObjects:nameSorter, nil];
         
         self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
@@ -83,8 +84,16 @@
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
-}
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Person Cell" forIndexPath:indexPath];
+    Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = message.message;
+
+    cell.detailTextLabel.text = [NSDateFormatter localizedStringFromDate:message.timestamp
+                                                                                      dateStyle:NSDateFormatterShortStyle
+                                                                                      timeStyle:NSDateFormatterFullStyle];
+    
+    return cell;
+}*/
 
 @end
 

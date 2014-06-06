@@ -457,9 +457,6 @@
                                         <rect key="frame" x="0.0" y="67" width="320" height="406"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                        <connections>
-                                            <segue destination="CkS-kP-irs" kind="embed" id="8p2-MC-qlv"/>
-                                        </connections>
                                     </containerView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UrR-gu-eVZ" userLabel="Add Members View">
                                         <rect key="frame" x="20" y="114" width="280" height="169"/>
@@ -579,7 +576,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="nJ4-E9-I02">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" image="E2D0B599-C54F-473A-90B6-73A0FDC218FE" id="fsV-Dj-2EC">
+                        <barButtonItem key="leftBarButtonItem" image="C1B1A4F0-91F5-4C07-A52B-A5F39A401080" id="fsV-Dj-2EC">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Create Group" textAlignment="center" minimumFontSize="17" id="fmz-dY-xH5">
@@ -700,34 +697,6 @@
             </objects>
             <point key="canvasLocation" x="-682" y="-473"/>
         </scene>
-        <!--Group MessagingTVC-->
-        <scene sceneID="a6z-ep-8Dz">
-            <objects>
-                <tableViewController id="CkS-kP-irs" customClass="GroupMessagingTVC" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="twp-GR-V9r">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="406"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ULH-lP-2p8">
-                                <rect key="frame" x="0.0" y="55" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ULH-lP-2p8" id="p2J-hc-Vug">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="CkS-kP-irs" id="hOR-A9-kN5"/>
-                            <outlet property="delegate" destination="CkS-kP-irs" id="kgv-Ij-acf"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="L5j-dB-RXE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1688" y="322"/>
-        </scene>
         <!--Facebook LoginVC-->
         <scene sceneID="S98-gU-eEH">
             <objects>
@@ -775,7 +744,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="E2D0B599-C54F-473A-90B6-73A0FDC218FE" width="32" height="32">
+        <image name="C1B1A4F0-91F5-4C07-A52B-A5F39A401080" width="32" height="32">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPj9YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQsLzI4O1UkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

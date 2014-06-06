@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Group, Message;
+@class Group;
 
 @interface Person : NSManagedObject
 
@@ -17,7 +17,6 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * phoneNumber;
 @property (nonatomic, retain) NSSet *groups;
-@property (nonatomic, retain) Message *messages;
 @end
 
 @interface Person (CoreDataGeneratedAccessors)

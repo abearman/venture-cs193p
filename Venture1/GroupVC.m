@@ -11,6 +11,7 @@
 #import "VentureAppDelegate.h"
 #import "Group.h"
 #import "Person.h"
+#import "Message.h"
 #import "VentureDatabase.h"
 #import "VentureServerLayer.h"
 #import "VentureLocationTracker.h"
@@ -107,7 +108,7 @@
                                                                     usingBlock:^(NSNotification *note) {
                                                                         self.managedObjectContext = ventureDb.managedObjectContext;
                                                                         [[NSNotificationCenter defaultCenter] removeObserver:observer];
-                                                                        [self defaultToFirstGroup];
+                                                                        //[self defaultToFirstGroup];
                                                                     }];
     }
 }
@@ -253,7 +254,7 @@
 
 - (void) defaultToFirstGroup {
     // Get the first Group in the database
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+    /*NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
     request.predicate = nil;
     NSError *error;
     NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -264,7 +265,7 @@
         self.groupName.enabled = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:group.name];
         // Load group conversation
-    }
+    }*/
 }
 
 - (void) changedGroup:(NSNotification *)notification {
@@ -415,6 +416,30 @@
 
 - (IBAction)sendMessage:(UIButton *)sender {
     NSLog(@"Send message");
+    
+    // Get the Group to add the message to
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+    request.predicate = [NSPredicate predicateWithFormat:@"name = %@", self.groupName];
+    NSError *error1;
+    NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error1];
+    
+    // Create the Message object to add to the Group
+    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
+    message.message = self.messageTextField.text;
+    // message.sender =
+    message.timestamp = [NSDate date];
+    // message.group = [groups firstObject];
+    
+    NSError *error2;
+    if (![self.managedObjectContext save:&error2]) {
+        NSLog(@"Whoops, couldn't save: %@", [error2 localizedDescription]);
+    } else {
+        NSLog(@"Successfully saved Message with message %@", message.message);
+    }
 }
 
 @end
+
+
+
+

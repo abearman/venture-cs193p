@@ -7,7 +7,6 @@
 //
 
 #import "Group.h"
-#import "Message.h"
 #import "Person.h"
 
 
@@ -15,6 +14,5 @@
 
 @dynamic name;
 @dynamic members;
-@dynamic messages;
 
 @end

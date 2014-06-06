@@ -49,7 +49,7 @@
 - (void)setupFetchedResultsController {
     if (self.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
-        request.predicate = nil; // Because we want ALL Regions
+        request.predicate = nil; // Because we want ALL Groups
         
         NSSortDescriptor *nameSorter = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
         request.sortDescriptors = [NSArray arrayWithObjects:nameSorter, nil];

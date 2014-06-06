@@ -136,7 +136,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Person Cell" forIndexPath:indexPath];
-    Person *person = [self.fetchedResultsController objectAtIndexPath:indexPath]; // Retrieves the Region object at this row
+    Person *person = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     cell.textLabel.text = person.name;
     cell.textLabel.textAlignment = UITextAlignmentCenter;
