@@ -1,21 +1,20 @@
 //
-//  Message.m
+//  Group.m
 //  Venture1
 //
 //  Created by Amy Bearman on 6/6/14.
 //  Copyright (c) 2014 Amy Bearman. All rights reserved.
 //
 
-#import "Message.h"
 #import "Group.h"
+#import "Message.h"
 #import "Person.h"
 
 
-@implementation Message
+@implementation Group
 
-@dynamic message;
-@dynamic timestamp;
-@dynamic sender;
-@dynamic group;
+@dynamic name;
+@dynamic members;
+@dynamic messages;
 
 @end

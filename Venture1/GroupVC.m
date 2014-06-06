@@ -414,7 +414,7 @@
 // This section of the code handles sending messages
 
 - (IBAction)sendMessage:(UIButton *)sender {
-    
+    NSLog(@"Send message");
 }
 
 @end
