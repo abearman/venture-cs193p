@@ -19,11 +19,13 @@
 -(NSMutableDictionary *)getNextCachedAdventureOrNull:(NSMutableDictionary *)cachedAdventure;
 -(void)getNewAdventureSuggestion:(void (^)(NSMutableDictionary *))callback;
 -(void)rateAdventure:(int)adventureId rating:(int)rating;
+-(void)associatePhone:(NSString*)phone;
 -(void)associateFacebook:(NSString*)fuid;
 -(void)submitAdventure:(NSDictionary *)adventure;
 -(void)getGroups:(void (^)(NSMutableDictionary *))callback;
 -(void)createGroup:(NSString*)groupName;
 -(void)sendMessage:(NSString*)message toGroup:(NSString*)groupName;
+-(void)addAddressBookFriend:(NSString*)phone toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback;
 -(void)addFacebookFriend:(NSString*)fbid toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback;
 
 @end

@@ -12,8 +12,10 @@
 #import "Group.h"
 #import "Person.h"
 #import "VentureDatabase.h"
+#import "VentureServerLayer.h"
+#import "VentureLocationTracker.h"
 
-@interface GroupVC() <FBFriendPickerDelegate, UITextFieldDelegate, ABPeoplePickerNavigationControllerDelegate>
+@interface GroupVC() <FBFriendPickerDelegate, UITextFieldDelegate, ABPeoplePickerNavigationControllerDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *leftView;
 @property (weak, nonatomic) IBOutlet UIView *centerView;
@@ -26,6 +28,11 @@
 @property (strong, nonatomic) NSManagedObjectContext *context;
 @property (strong, nonatomic) UIManagedDocument *document;
 
+@property (nonatomic) VentureLocationTracker *locationTracker;
+@property (nonatomic) VentureServerLayer *serverLayer;
+
+@property (nonatomic) NSTimer *timer;
+
 @end
 
 @implementation GroupVC
@@ -36,6 +43,15 @@
 - (void) viewDidLoad {
     [self setUpGestureRecognizers];
     [self setUpNavigationBar];
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *phoneNumber = [defaults stringForKey:@"phone"];
+
+    if (phoneNumber == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Phone Number" message:@"Enter your phone number" delegate:self cancelButtonTitle:@"Leave" otherButtonTitles:@"Submit", nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert show];
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(createGroup:)
@@ -46,8 +62,29 @@
                                              selector:@selector(changedGroup:)
                                                  name:@"ChangedGroup"
                                                object:nil];
-    
+
+    self.locationTracker = [[VentureLocationTracker alloc] init];
+    self.serverLayer = [[VentureServerLayer alloc] initWithLocationTracker:self.locationTracker];
+
     [self setUpAddMembersView];
+
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateChatView) userInfo:nil repeats:YES];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"%i",buttonIndex);
+    NSString *phone = [alertView textFieldAtIndex:0].text;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:phone forKey:@"phone"];
+    [self.serverLayer associatePhone:phone];
+}
+
+
+- (void) updateChatView {
+    [self.serverLayer getGroups:^(NSMutableDictionary *groupData) {
+        // TODO: Update views with group data
+        NSLog(@"%@",groupData);
+    }];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -81,7 +118,7 @@
 
 # pragma mark People Picker
 
-- (void) addMember:(NSString *)name forGroupName:(NSString *)groupName {
+- (void) addMember:(NSString *)name forGroupName:(NSString *)groupName withPhone:(NSString *)phoneNumber {
     // Get the Group the Person belongs to
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
     request.predicate = [NSPredicate predicateWithFormat:@"name = %@", groupName];
@@ -100,6 +137,11 @@
         NSLog(@"Whoops, couldn't save: %@", [error2 localizedDescription]);
     } else {
         NSLog(@"Successfully saved Person with name %@", person.name);
+        [self.serverLayer addAddressBookFriend:phoneNumber toGroup:groupName successFailureCallback:^(BOOL success) {
+            if (!success) {
+                // TODO: Send text message dialog: "You're invited to download Venture!"
+            }
+        }];
     }
 }
 
@@ -111,8 +153,9 @@
       shouldContinueAfterSelectingPerson:(ABRecordRef)person {
     
     NSString *name = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
-    NSLog(@"%@", name);
-    [self addMember:name forGroupName:self.groupName.text];
+    NSString *phone = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonPhoneMainLabel);
+    NSLog(@"%@ - %@", name, phone);
+    [self addMember:name forGroupName:self.groupName.text withPhone:phone];
     
     [self dismissViewControllerAnimated:YES completion:nil];
     return NO;
@@ -181,6 +224,7 @@
         NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
     } else {
         NSLog(@"Successfully saved group with name %@", group.name);
+        [self.serverLayer createGroup:name];
     }
 }
 
