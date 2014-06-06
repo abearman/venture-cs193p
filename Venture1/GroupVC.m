@@ -34,12 +34,14 @@
 @synthesize context;
 @synthesize document;
 
-#define OFFSET_FOR_KEYBOARD 100.0
+#define OFFSET_FOR_KEYBOARD 168.0
 
 - (void) viewDidLoad {
     [self setUpGestureRecognizers];
     [self setUpNavigationBar];
     self.addMembersButton.alpha = 0.5;
+    
+    [self setUpMessageTextField];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(createGroup:)
@@ -76,6 +78,13 @@
     }
 }
 
+- (void)setUpMessageTextField {
+    self.messageTextField.layer.cornerRadius=8.0f;
+    self.messageTextField.layer.masksToBounds=YES;
+    self.messageTextField.layer.borderColor=[[UIColor lightGrayColor]CGColor];
+    self.messageTextField.layer.borderWidth= 0.5f;
+}
+
 -(void)textFieldDidBeginEditing:(UITextField *)sender
 {
     if ([sender isEqual:self.messageTextField])
@@ -110,13 +119,11 @@
         // 1. move the view's origin up so that the text field that will be hidden come above the keyboard
         // 2. increase the size of the view so that the area behind the keyboard is covered up.
         rect.origin.y -= OFFSET_FOR_KEYBOARD;
-        rect.size.height += OFFSET_FOR_KEYBOARD;
     }
     else
     {
         // revert back to the normal state.
         rect.origin.y += OFFSET_FOR_KEYBOARD;
-        rect.size.height -= OFFSET_FOR_KEYBOARD;
     }
     self.messageTextField.frame = rect;
     
