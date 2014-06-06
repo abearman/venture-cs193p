@@ -24,15 +24,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *addMembersButton;
 @property (weak, nonatomic) IBOutlet UITextField *messageTextField;
 
-@property (strong, nonatomic) NSManagedObjectContext *context;
-@property (strong, nonatomic) UIManagedDocument *document;
-
 @end
 
 @implementation GroupVC
-
-@synthesize context;
-@synthesize document;
 
 #define OFFSET_FOR_KEYBOARD 168.0
 
@@ -74,6 +68,7 @@
                                                                     usingBlock:^(NSNotification *note) {
                                                                         self.managedObjectContext = ventureDb.managedObjectContext;
                                                                         [[NSNotificationCenter defaultCenter] removeObserver:observer];
+                                                                        [self defaultToFirstGroup];
                                                                     }];
     }
 }
@@ -208,6 +203,19 @@
                      completion:^(BOOL finished) {
                          [self.groupName becomeFirstResponder];
                      }];
+}
+
+- (void) defaultToFirstGroup {
+    // Get the first Group in the database
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+    request.predicate = nil;
+    NSError *error;
+    NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error];
+    Group *group = [groups firstObject];
+    self.groupName.text = group.name;
+    self.groupName.enabled = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:group.name];
+    // Load group conversation
 }
 
 - (void) changedGroup:(NSNotification *)notification {
