@@ -9,6 +9,7 @@
 
 @implementation VentureLocationTracker {
     CLGeocoder *_geocoder;
+    void (^firstCallback)(void);
 }
 
 #pragma mark Constructor
@@ -24,6 +25,15 @@
         _geocoder = [[CLGeocoder alloc] init];
     }
     return self;
+}
+
+-(void)setCallbackForFirstLocation:(void (^)(void))callback {
+    if (_currentLocation != nil) {
+        callback();
+    }
+    else {
+        firstCallback = callback;
+    }
 }
 
 #pragma mark LocationGetters
@@ -73,17 +83,17 @@
 
 -(void)setLocationToAddress:(NSString *)location {
     [_geocoder geocodeAddressString:location
-                      completionHandler:^(NSArray *placemarks, NSError *error) {
-        if (!error) {
-            [_locationManager stopUpdatingLocation];
-            CLPlacemark *placemark = [placemarks firstObject];
-            _currentLocation = placemark.location;
-        } else {
-            NSLog(@"There was a forward geocoding error\n%@",
-                    [error localizedDescription]);
-            [self clearAddress];
-        }
-    }];
+                  completionHandler:^(NSArray *placemarks, NSError *error) {
+                      if (!error) {
+                          [_locationManager stopUpdatingLocation];
+                          CLPlacemark *placemark = [placemarks firstObject];
+                          _currentLocation = placemark.location;
+                      } else {
+                          NSLog(@"There was a forward geocoding error\n%@",
+                                [error localizedDescription]);
+                          [self clearAddress];
+                      }
+                  }];
 }
 
 -(void)clearAddress {
@@ -97,6 +107,10 @@
           fromLocation:(CLLocation *)oldLocation
 {
     _currentLocation = newLocation;
+    if (firstCallback != nil) {
+        firstCallback();
+        firstCallback = nil;
+    }
 }
 
 @end

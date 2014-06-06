@@ -60,24 +60,27 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.activityView.userInteractionEnabled = YES;
-
+    
     self.locationTracker = [[VentureLocationTracker alloc] init];
     self.serverLayer = [[VentureServerLayer alloc] initWithLocationTracker:self.locationTracker];
-
+    
     self.modeOfTransportation = 2;
     self.activityType = 0;
-
+    
     [self setUpNavigationBar];
     [self setUpSearchBar];
-
+    
     slidingViewHome = self.dragView.center;
     slidingViewHome.y -= 65;
-
+    
     [self.leftBumper setAlpha:0];
     [self.rightBumper setAlpha:0];
     [self.topBumper setAlpha:0];
-
-    [self getNewActivity:self.modeOfTransportation atFeeling:self.activityType];
+    
+    [self.spinner startAnimating];
+    [self.locationTracker setCallbackForFirstLocation:^{
+        [self getNewActivity:self.modeOfTransportation atFeeling:self.activityType callback:^{}];
+    }];
 }
 
 /*** NAVIGATION BAR AND SEARCH BAR ***/
@@ -111,10 +114,10 @@
 }
 
 - (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-     NSString *specifiedLoc = self.searchBar.text;
-
+    NSString *specifiedLoc = self.searchBar.text;
+    
     [self.locationTracker setLocationToAddress:specifiedLoc];
-
+    
     [self.searchBar resignFirstResponder];
     self.searchBar.hidden = YES;
 }
@@ -122,66 +125,68 @@
 - (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
     CGPoint translation = [recognizer translationInView:self.view];
     recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
-            recognizer.view.center.y + translation.y);
+                                         recognizer.view.center.y + translation.y);
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
-
+    
     CGFloat bumperWidth = 150;
-
+    
     if ([recognizer numberOfTouches] > 0) {
         CGPoint touchLocation = [recognizer locationOfTouch:0 inView:self.view];
-
+        
         [self.leftBumper setAlpha:1 - (touchLocation.x / bumperWidth)];
         [self.rightBumper setAlpha:1 - (([UIScreen mainScreen].bounds.size.width -
-                touchLocation.x) / bumperWidth)];
+                                         touchLocation.x) / bumperWidth)];
         [self.topBumper setAlpha:1 - ((touchLocation.y-15) / bumperWidth)];
-
+        
         cachedTouchLocation = touchLocation;
     }
-
+    
     if (recognizer.state == UIGestureRecognizerStateEnded) {
-
+        CGPoint velocity = [recognizer velocityInView:self.view];
+        
         [self.leftBumper setAlpha:0];
         [self.rightBumper setAlpha:0];
         [self.topBumper setAlpha:0];
-
+        
         int edgeOffset = 600;
-
+        int velocityTrigger = 100;
+        
         CGPoint touchLocation = cachedTouchLocation;
-        if (touchLocation.x < bumperWidth/2) {
+        if ((touchLocation.x < bumperWidth/2) || (velocity.x < -velocityTrigger)) {
             [UIView animateWithDuration:0.5
                                   delay:0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^{
-                recognizer.view.center = CGPointMake(-edgeOffset,slidingViewHome.y);
-            } completion:^(BOOL finished) {
-                [self respondToSwipeRight];
-            }];
+                                 recognizer.view.center = CGPointMake(-edgeOffset,slidingViewHome.y);
+                             } completion:^(BOOL finished) {
+                                 [self respondToSwipeRight];
+                             }];
         }
-        else if (touchLocation.x > [[UIScreen mainScreen] bounds].size.width - (bumperWidth/2)) {
+        else if ((touchLocation.x > [[UIScreen mainScreen] bounds].size.width - (bumperWidth/2)) || (velocity.x > velocityTrigger)) {
             [UIView animateWithDuration:0.5
                                   delay:0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^{
-                recognizer.view.center = CGPointMake(edgeOffset,slidingViewHome.y);
-            } completion:^(BOOL finished) {
-                [self respondToSwipeLeft];
-            }];
+                                 recognizer.view.center = CGPointMake(edgeOffset,slidingViewHome.y);
+                             } completion:^(BOOL finished) {
+                                 [self respondToSwipeLeft];
+                             }];
         }
-        else if (touchLocation.y < 15 + (bumperWidth/2)) {
+        else if ((touchLocation.y < 15 + (bumperWidth/2)) || (velocity.y < -velocityTrigger)) {
             [UIView animateWithDuration:0.5
                                   delay:0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^{
-                recognizer.view.center = CGPointMake(slidingViewHome.x,-300);
-            } completion:^(BOOL finished) {
-                [self respondToSwipeUp];
-                [self animatedSuggestionReset];
-            }];
+                                 recognizer.view.center = CGPointMake(slidingViewHome.x,-300);
+                             } completion:^(BOOL finished) {
+                                 [self respondToSwipeUp];
+                                 [self animatedSuggestionReset];
+                             }];
         }
         else {
             [self animatedSuggestionReset];
         }
-
+        
     }
 }
 
@@ -190,10 +195,10 @@
                           delay:0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-        self.dragView.center = slidingViewHome;
-    } completion:^(BOOL finished) {
-        // Don't do anything, since we're just resetting
-    }];
+                         self.dragView.center = slidingViewHome;
+                     } completion:^(BOOL finished) {
+                         // Don't do anything, since we're just resetting
+                     }];
 }
 
 /*** MODE OF TRANSPORT ***/
@@ -219,11 +224,14 @@
     }
 }
 
--(void)getNewActivity:(int)indexOfTransport atFeeling:(int)indexOfFeeling {
+-(void)getNewActivity:(int)indexOfTransport atFeeling:(int)indexOfFeeling callback:(void (^)())callback {
     [self.spinner startAnimating];
+    NSLog(@"Getting adventure from %@",self.serverLayer);
     [self.serverLayer getNewAdventureSuggestion:^(NSMutableDictionary *suggestion) {
         [self.spinner stopAnimating];
+        NSLog(@"Got adventure");
         self.currentAdventure = suggestion;
+        callback();
     }];
 }
 
@@ -232,7 +240,7 @@
     for (UIView *view in self.imageView.subviews) {
         [view removeFromSuperview];
     }
-
+    
     // Add images for all the pictures in the cache
     int x = 0;
     for (UIImage *image in images) {
@@ -258,7 +266,7 @@
     else if (address != nil) {
         self.activityAddress.text = address;
     }
-
+    
     if (lat == nil && lng == nil && address != nil) {
         [self.locationTracker geocode:address callback:^(double latDouble, double lngDouble) {
             CLLocation *loc2 = [[CLLocation alloc] initWithLatitude:latDouble longitude:lngDouble];
@@ -270,20 +278,20 @@
     else if (lat != nil && lng != nil) {
         NSLog(@"Doing lat and lng using current values");
         CLLocation *loc2 = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lng doubleValue]];
-
+        
         double distance = [self.locationTracker.currentLocation distanceFromLocation:loc2];
         distance /= 1000.0;
         self.activityDistanceAway.text = [NSString stringWithFormat:@"%f km", distance];
     }
-
+    
     // Get ratings
-
+    
     self.rating1.alpha = 0;
     self.rating2.alpha = 0;
     self.rating3.alpha = 0;
-
+    
     int ratingNumber = 0;
-
+    
     NSArray *metadataSources = [currentAdventure objectForKey:@"metadata"];
     for (NSDictionary *metadataSource in metadataSources) {
         NSString *source = [metadataSource objectForKey:@"source"];
@@ -311,15 +319,15 @@
         }
         ratingNumber++;
     }
-
+    
     // Check if we've already downloaded the images for this guy in the past
-
+    
     if (![[currentAdventure allKeys] containsObject:@"image_cache"]) {
-
+        
         // Figure out a list of images to download
-
+        
         NSMutableArray *images = [[NSMutableArray alloc] init];
-
+        
         NSArray *metadataSources = [currentAdventure objectForKey:@"metadata"];
         for (NSDictionary *metadataSource in metadataSources) {
             NSString *source = [metadataSource objectForKey:@"source"];
@@ -334,18 +342,18 @@
                     [images addObject:[metadataSource objectForKey:@"opentable_image"]];
             }
         }
-
+        
         // Setup the image cache to receive images
-
+        
         [currentAdventure setValue:[[NSMutableArray alloc] init] forKey:@"image_cache"];
-
+        
         // Download all the images asynchronously
-
+        
         for (NSString *imageURL in images) {
             NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:imageURL]];
             NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
             NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
-
+            
             [[session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
                 if (!error) {
                     NSData *imageData = [NSData dataWithContentsOfURL:location];
@@ -373,23 +381,25 @@
 }
 
 -(void)respondToSwipeRight {
+    self.dragView.center = CGPointMake(EDGE_OFFSET,slidingViewHome.y);
     if (self.currentAdventure != NULL && [self.serverLayer getNextCachedAdventureOrNull:self.currentAdventure] != NULL) {
         self.currentAdventure = [self.serverLayer getNextCachedAdventureOrNull:self.currentAdventure];
+        [self animatedSuggestionReset];
     }
     else {
-        [self getNewActivity:self.modeOfTransportation atFeeling:self.activityType];
+        [self getNewActivity:self.modeOfTransportation atFeeling:self.activityType callback:^{
+            [self animatedSuggestionReset];
+        }];
     }
-    self.dragView.center = CGPointMake(EDGE_OFFSET,slidingViewHome.y);
-    [self animatedSuggestionReset];
 }
 
 -(void)respondToSwipeUp {
     /*[[NSUserDefaults standardUserDefaults] setObject:self.savedActivity.title forKey:@"Saved Activity Title"];
-    [[NSUserDefaults standardUserDefaults] setObject:self.savedActivity.imageURL forKey:@"Saved Activity Image"];
-    [[NSUserDefaults standardUserDefaults] setObject:self.savedActivity.ID forKey:@"Saved Activity ID"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    NSLog(@"%@", self.savedActivity.ID);*/
+     [[NSUserDefaults standardUserDefaults] setObject:self.savedActivity.imageURL forKey:@"Saved Activity Image"];
+     [[NSUserDefaults standardUserDefaults] setObject:self.savedActivity.ID forKey:@"Saved Activity ID"];
+     [[NSUserDefaults standardUserDefaults] synchronize];
+     
+     NSLog(@"%@", self.savedActivity.ID);*/
     
     NSString *destAddr;
     destAddr = [self.activityAddress.text stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -421,7 +431,6 @@
 }
 
 @end
-
 
 
 
