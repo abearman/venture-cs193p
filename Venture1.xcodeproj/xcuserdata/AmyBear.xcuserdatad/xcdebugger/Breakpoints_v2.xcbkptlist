@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Venture1/MembersListTVC.m"
-            timestampString = "423700752.84219"
+            timestampString = "423701933.966817"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
             landmarkName = "-setupFetchedResultsController"
             landmarkType = "5">
          </BreakpointContent>

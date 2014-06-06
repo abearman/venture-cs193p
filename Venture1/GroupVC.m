@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *groupName;
 @property (weak, nonatomic) IBOutlet UIView *addMembersView;
 @property (weak, nonatomic) IBOutlet UIButton *addMembersButton;
+@property (weak, nonatomic) IBOutlet UITextField *messageTextField;
 
 @property (strong, nonatomic) NSManagedObjectContext *context;
 @property (strong, nonatomic) UIManagedDocument *document;
@@ -33,9 +34,12 @@
 @synthesize context;
 @synthesize document;
 
+#define OFFSET_FOR_KEYBOARD 100.0
+
 - (void) viewDidLoad {
     [self setUpGestureRecognizers];
     [self setUpNavigationBar];
+    self.addMembersButton.alpha = 0.5;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(createGroup:)
@@ -72,6 +76,57 @@
     }
 }
 
+-(void)textFieldDidBeginEditing:(UITextField *)sender
+{
+    if ([sender isEqual:self.messageTextField])
+    {
+        //move the main view, so that the keyboard does not hide it.
+        if  (self.messageTextField.frame.origin.y >= 0)
+        {
+            [self setViewMovedUp:YES];
+        }
+    }
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+    if (textField == self.messageTextField) {
+        //move the main view, so that the keyboard does not hide it.
+        if  (self.messageTextField.frame.origin.y >= 0)
+        {
+            [self setViewMovedUp:NO];
+        }
+    }
+}
+
+//method to move the view up/down whenever the keyboard is shown/dismissed
+-(void)setViewMovedUp:(BOOL)movedUp
+{
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3]; // if you want to slide up the view
+    
+    CGRect rect = self.messageTextField.frame;
+    if (movedUp)
+    {
+        // 1. move the view's origin up so that the text field that will be hidden come above the keyboard
+        // 2. increase the size of the view so that the area behind the keyboard is covered up.
+        rect.origin.y -= OFFSET_FOR_KEYBOARD;
+        rect.size.height += OFFSET_FOR_KEYBOARD;
+    }
+    else
+    {
+        // revert back to the normal state.
+        rect.origin.y += OFFSET_FOR_KEYBOARD;
+        rect.size.height -= OFFSET_FOR_KEYBOARD;
+    }
+    self.messageTextField.frame = rect;
+    
+    [UIView commitAnimations];
+}
+
+- (IBAction)dismissAddMembers:(UIButton *)sender {
+    self.addMembersView.hidden = YES;
+}
+
 - (IBAction)addMembers:(UIButton *)sender {
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
     picker.peoplePickerDelegate = self;
@@ -91,8 +146,6 @@
     // Create the Person object to add to the Group
     Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
     person.name = name;
-    Group *group = [groups firstObject];
-    NSString *foundGroupName = group.name;
     person.groups = [[NSSet alloc] initWithObjects:[groups firstObject], nil];
     
     NSError *error2;
@@ -101,6 +154,7 @@
     } else {
         NSLog(@"Successfully saved Person with name %@", person.name);
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:self.groupName.text];
 }
 
 - (void)peoplePickerNavigationControllerDidCancel: (ABPeoplePickerNavigationController *)peoplePicker {
@@ -187,18 +241,24 @@
 #pragma mark - UITextField Delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    self.addMembersView.alpha = 0.0;
-    self.addMembersView.hidden = NO;
-    
-    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut
-                     animations:^{
-                         self.addMembersView.alpha = 1.0;
-                         self.addMembersView.hidden = NO;
-                     }
-                     completion:nil];
-    
-    [textField resignFirstResponder];
-    [self createGroupWithName:textField.text];
+    if (textField == self.groupName) {
+        self.addMembersView.alpha = 0.0;
+        self.addMembersView.hidden = NO;
+        
+        [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             self.addMembersView.alpha = 1.0;
+                             self.addMembersView.hidden = NO;
+                         }
+                         completion:nil];
+        
+        [textField resignFirstResponder];
+        [self createGroupWithName:textField.text];
+        return YES;
+    } else if (textField == self.messageTextField) {
+        [textField resignFirstResponder];
+        return YES;
+    }
     return YES;
 }
 

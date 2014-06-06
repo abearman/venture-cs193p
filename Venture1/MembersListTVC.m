@@ -9,12 +9,14 @@
 #import "MembersListTVC.h"
 #import "VentureDatabase.h"
 #import "Person.h"
+#import <AddressBook/AddressBook.h>
+#import <AddressBookUI/AddressBookUI.h>
 
-@interface MembersListTVC () <UITableViewDelegate, UITableViewDataSource>
+@interface MembersListTVC () <UITableViewDelegate, UITableViewDataSource, ABPeoplePickerNavigationControllerDelegate>
 
 @property (nonatomic, strong) NSString *currentGroupName;
 
-@end
+@end 
 
 @implementation MembersListTVC
 
@@ -31,6 +33,57 @@
     NSLog(@"Received notification to members changed group");
     self.currentGroupName = [notification object];
     [self setupFetchedResultsController];
+}
+
+- (IBAction)addMembers:(UIBarButtonItem *)sender {
+    ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
+    picker.peoplePickerDelegate = self;
+    
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+# pragma mark People Picker
+
+- (void) addMember:(NSString *)name forGroupName:(NSString *)groupName {
+    // Get the Group the Person belongs to
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+    request.predicate = [NSPredicate predicateWithFormat:@"name = %@", groupName];
+    NSError *error1;
+    NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error1];
+    
+    // Create the Person object to add to the Group
+    Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
+    person.name = name;
+    person.groups = [[NSSet alloc] initWithObjects:[groups firstObject], nil];
+    
+    NSError *error2;
+    if (![self.managedObjectContext save:&error2]) {
+        NSLog(@"Whoops, couldn't save: %@", [error2 localizedDescription]);
+    } else {
+        NSLog(@"Successfully saved Person with name %@", person.name);
+    }
+}
+
+- (void)peoplePickerNavigationControllerDidCancel: (ABPeoplePickerNavigationController *)peoplePicker {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
+      shouldContinueAfterSelectingPerson:(ABRecordRef)person {
+    
+    NSString *name = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+    NSLog(@"%@", name);
+    [self addMember:name forGroupName:self.currentGroupName];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return NO;
+}
+
+- (BOOL)peoplePickerNavigationController: (ABPeoplePickerNavigationController *)peoplePicker
+      shouldContinueAfterSelectingPerson:(ABRecordRef)person
+                                property:(ABPropertyID)property
+                              identifier:(ABMultiValueIdentifier)identifier {
+    return NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

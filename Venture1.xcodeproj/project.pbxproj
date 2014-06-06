@@ -39,12 +39,12 @@
 		658B70D9193AE1A000B7A830 /* Lobster1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 658B70D8193AE15200B7A830 /* Lobster1.ttf */; };
 		658B70DA193AE1A200B7A830 /* Lobster1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 658B70D8193AE15200B7A830 /* Lobster1.ttf */; };
 		658B70DC193AE6C300B7A830 /* VentureModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 658B70DB193AE6C300B7A830 /* VentureModel.xcdatamodel */; };
-		658B70E3193AE6DF00B7A830 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70DE193AE6DF00B7A830 /* Group.m */; };
 		658B70E81940FDC900B7A830 /* VentureDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70E71940FDC900B7A830 /* VentureDatabase.m */; };
 		658B70EB1941013E00B7A830 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70EA1941013E00B7A830 /* CoreDataTableViewController.m */; };
-		658B70EE1941150C00B7A830 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70ED1941150C00B7A830 /* Person.m */; };
 		658B70F11941195700B7A830 /* MembersListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70F01941195700B7A830 /* MembersListTVC.m */; };
-		658B70F41941298F00B7A830 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70F31941298F00B7A830 /* Message.m */; };
+		658B70F71942278700B7A830 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70F61942278700B7A830 /* Person.m */; };
+		658B70FA1942278700B7A830 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70F91942278700B7A830 /* Message.m */; };
+		658B70FD1942278800B7A830 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70FC1942278800B7A830 /* Group.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,18 +104,18 @@
 		658B70D5193ADEBD00B7A830 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		658B70D8193AE15200B7A830 /* Lobster1.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lobster1.ttf; sourceTree = "<group>"; };
 		658B70DB193AE6C300B7A830 /* VentureModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VentureModel.xcdatamodel; sourceTree = "<group>"; };
-		658B70DD193AE6DF00B7A830 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
-		658B70DE193AE6DF00B7A830 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		658B70E61940FDC900B7A830 /* VentureDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VentureDatabase.h; sourceTree = "<group>"; };
 		658B70E71940FDC900B7A830 /* VentureDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VentureDatabase.m; sourceTree = "<group>"; };
 		658B70E91941013E00B7A830 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
 		658B70EA1941013E00B7A830 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
-		658B70EC1941150C00B7A830 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
-		658B70ED1941150C00B7A830 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		658B70EF1941195700B7A830 /* MembersListTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MembersListTVC.h; sourceTree = "<group>"; };
 		658B70F01941195700B7A830 /* MembersListTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MembersListTVC.m; sourceTree = "<group>"; };
-		658B70F21941298F00B7A830 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
-		658B70F31941298F00B7A830 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		658B70F51942278700B7A830 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		658B70F61942278700B7A830 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		658B70F81942278700B7A830 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		658B70F91942278700B7A830 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		658B70FB1942278800B7A830 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		658B70FC1942278800B7A830 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,12 +232,12 @@
 				658B70E61940FDC900B7A830 /* VentureDatabase.h */,
 				658B70E71940FDC900B7A830 /* VentureDatabase.m */,
 				658B70DB193AE6C300B7A830 /* VentureModel.xcdatamodel */,
-				658B70F21941298F00B7A830 /* Message.h */,
-				658B70F31941298F00B7A830 /* Message.m */,
-				658B70EC1941150C00B7A830 /* Person.h */,
-				658B70ED1941150C00B7A830 /* Person.m */,
-				658B70DD193AE6DF00B7A830 /* Group.h */,
-				658B70DE193AE6DF00B7A830 /* Group.m */,
+				658B70FB1942278800B7A830 /* Group.h */,
+				658B70FC1942278800B7A830 /* Group.m */,
+				658B70F81942278700B7A830 /* Message.h */,
+				658B70F91942278700B7A830 /* Message.m */,
+				658B70F51942278700B7A830 /* Person.h */,
+				658B70F61942278700B7A830 /* Person.m */,
 				658B6E94193ADA0700B7A830 /* VentureServerLayer.h */,
 				658B6E93193ADA0700B7A830 /* VentureServerLayer.m */,
 				658B6E95193ADA0700B7A830 /* VentureLocationTracker.m */,
@@ -393,7 +393,6 @@
 			files = (
 				658B6E92193AD9F200B7A830 /* CreateGroupTVC.m in Sources */,
 				658B6E90193AD9F200B7A830 /* GroupsListTVC.m in Sources */,
-				658B70EE1941150C00B7A830 /* Person.m in Sources */,
 				658B70F11941195700B7A830 /* MembersListTVC.m in Sources */,
 				658B6E9B193ADB0900B7A830 /* NSDictionary+URLEncoding.m in Sources */,
 				658B6E77193AD9E200B7A830 /* Grid.m in Sources */,
@@ -401,7 +400,9 @@
 				658B6E8C193AD9F200B7A830 /* SuggestionVC.m in Sources */,
 				658B70DC193AE6C300B7A830 /* VentureModel.xcdatamodel in Sources */,
 				658B70E81940FDC900B7A830 /* VentureDatabase.m in Sources */,
-				658B70F41941298F00B7A830 /* Message.m in Sources */,
+				658B70FD1942278800B7A830 /* Group.m in Sources */,
+				658B70F71942278700B7A830 /* Person.m in Sources */,
+				658B70FA1942278700B7A830 /* Message.m in Sources */,
 				658B6E98193ADA0700B7A830 /* VentureLocationTracker.m in Sources */,
 				658B6E8D193AD9F200B7A830 /* TrackAdventureVC.m in Sources */,
 				658B6E91193AD9F200B7A830 /* FacebookLoginVC.m in Sources */,
@@ -411,7 +412,6 @@
 				658B6E97193ADA0700B7A830 /* VentureServerLayer.m in Sources */,
 				658B6E8F193AD9F200B7A830 /* GroupVC.m in Sources */,
 				658B6E8E193AD9F200B7A830 /* CreateAdventureTVC.m in Sources */,
-				658B70E3193AE6DF00B7A830 /* Group.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
