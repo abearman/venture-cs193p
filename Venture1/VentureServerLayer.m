@@ -80,6 +80,19 @@
     }];
 }
 
+-(void)addAddressBookFriend:(NSString*)phone toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback {
+    NSDictionary *data = @{
+            @"group" : groupName,
+            @"phone" : phone
+    };
+    [self makeCallToVentureServer:@"/add-addressbook-friend" additionalData:data callback:^(NSMutableDictionary *response) {
+        if ([response objectForKey:@"status"] != nil && [[response objectForKey:@"status"] isEqualToString:@"success"]) {
+            callback(true);
+        }
+        else callback(false);
+    }];
+}
+
 -(void)getNewAdventureSuggestion:(void (^)(NSMutableDictionary *))callback {
     [self makeCallToVentureServer:@"/get-suggestion" callback:^(NSMutableDictionary *adventure) {
         if (adventure != nil) {
@@ -103,6 +116,13 @@
             @"fb_uid" : fb_uid
     };
     [self makeCallToVentureServer:@"/associate-facebook" additionalData:data];
+}
+
+-(void)associatePhone:(NSString*)phone {
+    NSDictionary *data = @{
+            @"phone" : phone
+    };
+    [self makeCallToVentureServer:@"/associate-phone" additionalData:data];
 }
 
 -(void)submitAdventure:(NSDictionary *)adventure {
