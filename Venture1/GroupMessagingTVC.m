@@ -18,7 +18,7 @@
 
 @implementation GroupMessagingTVC
 
-/*- (void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     UIEdgeInsets inset = UIEdgeInsetsMake(30, 0, 0, 0);
     self.tableView.contentInset = inset;
@@ -93,7 +93,7 @@
                                                                                       timeStyle:NSDateFormatterFullStyle];
     
     return cell;
-}*/
+}
 
 @end
 

@@ -108,7 +108,7 @@
                                                                     usingBlock:^(NSNotification *note) {
                                                                         self.managedObjectContext = ventureDb.managedObjectContext;
                                                                         [[NSNotificationCenter defaultCenter] removeObserver:observer];
-                                                                        //[self defaultToFirstGroup];
+                                                                        [self defaultToFirstGroup];
                                                                     }];
     }
 }
@@ -189,6 +189,8 @@
     // Create the Person object to add to the Group
     Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
     person.name = name;
+    Group *group = [groups firstObject];
+    NSString *groupNameStr = group.name;
     person.groups = [[NSSet alloc] initWithObjects:[groups firstObject], nil];
     
     NSError *error2;
@@ -196,11 +198,13 @@
         NSLog(@"Whoops, couldn't save: %@", [error2 localizedDescription]);
     } else {
         NSLog(@"Successfully saved Person with name %@", person.name);
-        [self.serverLayer addAddressBookFriend:phoneNumber toGroup:groupName successFailureCallback:^(BOOL success) {
-            if (!success) {
-                // TODO: Send text message dialog: "You're invited to download Venture!"
-            }
-        }];
+        if (phoneNumber != nil) {
+            [self.serverLayer addAddressBookFriend:phoneNumber toGroup:groupName successFailureCallback:^(BOOL success) {
+                if (!success) {
+                    // TODO: Send text message dialog: "You're invited to download Venture!"
+                }
+            }];
+        }
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:self.groupName.text];
 }
@@ -213,9 +217,9 @@
       shouldContinueAfterSelectingPerson:(ABRecordRef)person {
     
     NSString *name = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
-    NSString *phone = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonPhoneMainLabel);
-    NSLog(@"%@ - %@", name, phone);
-    [self addMember:name forGroupName:self.groupName.text withPhone:phone];
+    //NSString *phone = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonPhoneMainLabel);
+    //NSLog(@"%@ - %@", name, phone);
+    [self addMember:name forGroupName:self.groupName.text withPhone:nil];
     
     [self dismissViewControllerAnimated:YES completion:nil];
     return NO;
@@ -254,7 +258,7 @@
 
 - (void) defaultToFirstGroup {
     // Get the first Group in the database
-    /*NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
     request.predicate = nil;
     NSError *error;
     NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -265,7 +269,7 @@
         self.groupName.enabled = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:group.name];
         // Load group conversation
-    }*/
+    }
 }
 
 - (void) changedGroup:(NSNotification *)notification {

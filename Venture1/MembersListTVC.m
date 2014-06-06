@@ -113,16 +113,19 @@
 
 - (void)setupFetchedResultsController {
     if (self.managedObjectContext) {
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Person"];
-        request.predicate = [NSPredicate predicateWithFormat:@"ANY groups.name like %@", self.currentGroupName];
+        if (self.currentGroupName != nil) {
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Person"];
+            request.predicate = [NSPredicate predicateWithFormat:@"ANY groups.name like %@", self.currentGroupName];
+            
+            NSSortDescriptor *nameSorter = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
+            request.sortDescriptors = [NSArray arrayWithObjects:nameSorter, nil];
+            
+            self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                                managedObjectContext:self.managedObjectContext
+                                                                                  sectionNameKeyPath:nil
+                                                                                        cacheName:nil];
+        }
         
-        NSSortDescriptor *nameSorter = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
-        request.sortDescriptors = [NSArray arrayWithObjects:nameSorter, nil];
-        
-        self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                                            managedObjectContext:self.managedObjectContext
-                                                                              sectionNameKeyPath:nil
-                                                                                       cacheName:nil];
     } else {
         self.fetchedResultsController = nil;
     }
