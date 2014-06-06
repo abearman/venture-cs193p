@@ -211,11 +211,14 @@
     request.predicate = nil;
     NSError *error;
     NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error];
-    Group *group = [groups firstObject];
-    self.groupName.text = group.name;
-    self.groupName.enabled = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:group.name];
-    // Load group conversation
+    
+    if ([groups count]) {
+        Group *group = [groups firstObject];
+        self.groupName.text = group.name;
+        self.groupName.enabled = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:group.name];
+        // Load group conversation
+    }
 }
 
 - (void) changedGroup:(NSNotification *)notification {
