@@ -11,6 +11,8 @@
 
 @interface GroupMessagingTVC () <UITableViewDelegate, UITableViewDataSource>
 
+@property (nonatomic, strong) NSString *currentGroupName;
+
 @end
 
 @implementation GroupMessagingTVC
@@ -34,6 +36,20 @@
     }
 }
 
+- (void)viewDidLoad {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(membersChangedGroup:)
+                                                 name:@"MembersChangedGroup"
+                                               object:nil];
+}
+
+- (void) membersChangedGroup:(NSNotification *)notification {
+    NSLog(@"Group messaging received notification to members changed group");
+    self.currentGroupName = [notification object];
+    [self setupFetchedResultsController];
+}
+
+
 - (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     _managedObjectContext = managedObjectContext;
     
@@ -45,7 +61,8 @@
 - (void)setupFetchedResultsController {
     if (self.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Message"];
-        request.predicate = [NSPredicate predicateWithFormat:@"ANY groups.name like %@", self.currentGroupName];
+        request.predicate = [NSPredicate predicateWithFormat:@"group = %@", self.currentGroupName];
+        
         
         NSSortDescriptor *nameSorter = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
         request.sortDescriptors = [NSArray arrayWithObjects:nameSorter, nil];
@@ -66,13 +83,7 @@
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Person Cell" forIndexPath:indexPath];
-    Person *person = [self.fetchedResultsController objectAtIndexPath:indexPath]; // Retrieves the Region object at this row
-    
-    cell.textLabel.text = person.name;
-    cell.textLabel.textAlignment = UITextAlignmentCenter;
-    
-    return cell;
+    return nil;
 }
 
 @end

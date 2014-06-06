@@ -21,8 +21,6 @@
 @implementation MembersListTVC
 
 - (void)viewDidLoad {
-    self.currentGroupName = @"Venture";
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(membersChangedGroup:)
                                                  name:@"MembersChangedGroup"
@@ -30,7 +28,7 @@
 }
 
 - (void) membersChangedGroup:(NSNotification *)notification {
-    NSLog(@"Received notification to members changed group");
+    NSLog(@"Members received notification to members changed group");
     self.currentGroupName = [notification object];
     [self setupFetchedResultsController];
 }
