@@ -22,7 +22,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *groupName;
 @property (weak, nonatomic) IBOutlet UIView *addMembersView;
 @property (weak, nonatomic) IBOutlet UIButton *addMembersButton;
+
 @property (weak, nonatomic) IBOutlet UITextField *messageTextField;
+@property (weak, nonatomic) IBOutlet UIView *messageView;
 
 @end
 
@@ -108,19 +110,20 @@
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3]; // if you want to slide up the view
     
-    CGRect rect = self.messageTextField.frame;
+    CGRect messageViewFrame = self.messageView.frame;
+    
     if (movedUp)
     {
         // 1. move the view's origin up so that the text field that will be hidden come above the keyboard
         // 2. increase the size of the view so that the area behind the keyboard is covered up.
-        rect.origin.y -= OFFSET_FOR_KEYBOARD;
+        messageViewFrame.origin.y -= OFFSET_FOR_KEYBOARD;
     }
     else
     {
         // revert back to the normal state.
-        rect.origin.y += OFFSET_FOR_KEYBOARD;
+        messageViewFrame.origin.y += OFFSET_FOR_KEYBOARD;
     }
-    self.messageTextField.frame = rect;
+    self.messageView.frame = messageViewFrame;
     
     [UIView commitAnimations];
 }
@@ -360,6 +363,14 @@
                          }
                          completion:nil];
     }
+}
+
+
+//////////////////////////////////////
+// This section of the code handles sending messages
+
+- (IBAction)sendMessage:(UIButton *)sender {
+    
 }
 
 @end
