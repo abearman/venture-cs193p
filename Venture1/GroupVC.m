@@ -189,8 +189,6 @@
     // Create the Person object to add to the Group
     Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
     person.name = name;
-    Group *group = [groups firstObject];
-    NSString *groupNameStr = group.name;
     person.groups = [[NSSet alloc] initWithObjects:[groups firstObject], nil];
     
     NSError *error2;

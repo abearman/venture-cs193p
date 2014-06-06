@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+@class Group, Person;
 
 @interface Message : NSManagedObject
 
 @property (nonatomic, retain) NSString * message;
 @property (nonatomic, retain) NSDate * timestamp;
+@property (nonatomic, retain) Group *sender;
+@property (nonatomic, retain) Person *group;
 
 @end

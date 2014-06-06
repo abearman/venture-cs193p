@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Person;
+@class Message, Person;
 
 @interface Group : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSSet *members;
+@property (nonatomic, retain) Message *messages;
 @end
 
 @interface Group (CoreDataGeneratedAccessors)

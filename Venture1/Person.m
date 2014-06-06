@@ -8,6 +8,7 @@
 
 #import "Person.h"
 #import "Group.h"
+#import "Message.h"
 
 
 @implementation Person
@@ -16,5 +17,6 @@
 @dynamic name;
 @dynamic phoneNumber;
 @dynamic groups;
+@dynamic messages;
 
 @end
