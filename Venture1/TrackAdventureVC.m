@@ -79,7 +79,7 @@
     
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
     annotation.coordinate = touchMapCoordinate;
-    annotation.title = @"Point!";
+    annotation.title = @"Add an adventure!";
     
     [self.mapView addAnnotation:annotation];
     [self.mapView selectAnnotation:annotation animated:YES];
@@ -97,7 +97,10 @@
             pinView.pinColor = MKPinAnnotationColorPurple;
             pinView.canShowCallout = YES;
             pinView.animatesDrop = YES;
+            
             pinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+        } else {
+            pinView.rightCalloutAccessoryView = nil;
         }
     } else {
         [mapView.userLocation setTitle:@"You are here!"];
