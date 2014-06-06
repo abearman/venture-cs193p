@@ -376,13 +376,13 @@
     [[NSUserDefaults standardUserDefaults] setObject:self.savedActivity.ID forKey:@"Saved Activity ID"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    NSLog(@"%@", self.savedActivity.ID);
+    NSLog(@"%@", self.savedActivity.ID);*/
     
     NSString *destAddr;
     destAddr = [self.activityAddress.text stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     
     NSString *modeOfTransport;
-    int index = [self.modeOfTransportation selectedSegmentIndex];
+    int index = self.modeOfTransportation;
     if (index == 0) {
         modeOfTransport = @"walking";
     } else if (index == 1) {
@@ -393,7 +393,10 @@
         modeOfTransport = @"transit";
     }
     
-    NSString *url = [NSString stringWithFormat:@"comgooglemaps://?origin=%f,%f&daddr=%@&center=%@,%@&directionsmode=%@&zoom=10", currentLocation.coordinate.latitude, currentLocation.coordinate.longitude, destAddr, activityLat, activityLng, modeOfTransport];
+    NSString *lat = [self.currentAdventure objectForKey:@"lat"];
+    NSString *lng = [self.currentAdventure objectForKey:@"lng"];
+    
+    NSString *url = [NSString stringWithFormat:@"comgooglemaps://?origin=%@,%@&daddr=%@&center=%@,%@&directionsmode=%@&zoom=10", self.locationTracker.lat, self.locationTracker.lng, destAddr, lat, lng, modeOfTransport];
     
     if ([[UIApplication sharedApplication] canOpenURL:
          [NSURL URLWithString:@"comgooglemaps://"]]) {
@@ -401,7 +404,7 @@
          [NSURL URLWithString:url]];
     } else {
         NSLog(@"Can't use comgooglemaps://");
-    }*/
+    }
 }
 
 @end
