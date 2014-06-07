@@ -43,9 +43,9 @@
 		658B70EB1941013E00B7A830 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70EA1941013E00B7A830 /* CoreDataTableViewController.m */; };
 		658B70F11941195700B7A830 /* MembersListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70F01941195700B7A830 /* MembersListTVC.m */; };
 		658B710019423F3300B7A830 /* GroupMessagingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B70FF19423F3300B7A830 /* GroupMessagingTVC.m */; };
-		658B717219427CEB00B7A830 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B717119427CEB00B7A830 /* Group.m */; };
-		658B717519427CEB00B7A830 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B717419427CEB00B7A830 /* Message.m */; };
-		658B717819427CEB00B7A830 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B717719427CEB00B7A830 /* Person.m */; };
+		658B718419427E8C00B7A830 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B718319427E8C00B7A830 /* Group.m */; };
+		658B718719427E8C00B7A830 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B718619427E8C00B7A830 /* Person.m */; };
+		658B718A19427E8C00B7A830 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B718919427E8C00B7A830 /* Message.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,12 +113,12 @@
 		658B70F01941195700B7A830 /* MembersListTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MembersListTVC.m; sourceTree = "<group>"; };
 		658B70FE19423F3300B7A830 /* GroupMessagingTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMessagingTVC.h; sourceTree = "<group>"; };
 		658B70FF19423F3300B7A830 /* GroupMessagingTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMessagingTVC.m; sourceTree = "<group>"; };
-		658B717019427CEB00B7A830 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
-		658B717119427CEB00B7A830 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
-		658B717319427CEB00B7A830 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
-		658B717419427CEB00B7A830 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
-		658B717619427CEB00B7A830 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
-		658B717719427CEB00B7A830 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		658B718219427E8C00B7A830 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		658B718319427E8C00B7A830 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
+		658B718519427E8C00B7A830 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		658B718619427E8C00B7A830 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		658B718819427E8C00B7A830 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		658B718919427E8C00B7A830 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,12 +230,12 @@
 		658B6E72193AD9A200B7A830 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				658B717619427CEB00B7A830 /* Person.h */,
-				658B717719427CEB00B7A830 /* Person.m */,
-				658B717319427CEB00B7A830 /* Message.h */,
-				658B717419427CEB00B7A830 /* Message.m */,
-				658B717019427CEB00B7A830 /* Group.h */,
-				658B717119427CEB00B7A830 /* Group.m */,
+				658B718819427E8C00B7A830 /* Message.h */,
+				658B718919427E8C00B7A830 /* Message.m */,
+				658B718519427E8C00B7A830 /* Person.h */,
+				658B718619427E8C00B7A830 /* Person.m */,
+				658B718219427E8C00B7A830 /* Group.h */,
+				658B718319427E8C00B7A830 /* Group.m */,
 				658B70E91941013E00B7A830 /* CoreDataTableViewController.h */,
 				658B70EA1941013E00B7A830 /* CoreDataTableViewController.m */,
 				658B70E61940FDC900B7A830 /* VentureDatabase.h */,
@@ -398,16 +398,16 @@
 			files = (
 				658B6E92193AD9F200B7A830 /* CreateGroupTVC.m in Sources */,
 				658B6E90193AD9F200B7A830 /* GroupsListTVC.m in Sources */,
-				658B717819427CEB00B7A830 /* Person.m in Sources */,
+				658B718719427E8C00B7A830 /* Person.m in Sources */,
 				658B70F11941195700B7A830 /* MembersListTVC.m in Sources */,
 				658B6E9B193ADB0900B7A830 /* NSDictionary+URLEncoding.m in Sources */,
 				658B6E77193AD9E200B7A830 /* Grid.m in Sources */,
 				658B6E8B193AD9F200B7A830 /* VentureViewController.m in Sources */,
 				658B710019423F3300B7A830 /* GroupMessagingTVC.m in Sources */,
 				658B6E8C193AD9F200B7A830 /* SuggestionVC.m in Sources */,
-				658B717519427CEB00B7A830 /* Message.m in Sources */,
+				658B718A19427E8C00B7A830 /* Message.m in Sources */,
 				658B70DC193AE6C300B7A830 /* VentureModel.xcdatamodel in Sources */,
-				658B717219427CEB00B7A830 /* Group.m in Sources */,
+				658B718419427E8C00B7A830 /* Group.m in Sources */,
 				658B70E81940FDC900B7A830 /* VentureDatabase.m in Sources */,
 				658B6E98193ADA0700B7A830 /* VentureLocationTracker.m in Sources */,
 				658B6E8D193AD9F200B7A830 /* TrackAdventureVC.m in Sources */,

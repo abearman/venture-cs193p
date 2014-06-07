@@ -17,7 +17,7 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * phoneNumber;
 @property (nonatomic, retain) NSSet *groups;
-@property (nonatomic, retain) Message *messages;
+@property (nonatomic, retain) NSSet *messages;
 @end
 
 @interface Person (CoreDataGeneratedAccessors)
@@ -26,5 +26,10 @@
 - (void)removeGroupsObject:(Group *)value;
 - (void)addGroups:(NSSet *)values;
 - (void)removeGroups:(NSSet *)values;
+
+- (void)addMessagesObject:(Message *)value;
+- (void)removeMessagesObject:(Message *)value;
+- (void)addMessages:(NSSet *)values;
+- (void)removeMessages:(NSSet *)values;
 
 @end

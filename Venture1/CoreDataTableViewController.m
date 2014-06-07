@@ -120,7 +120,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[self.fetchedResultsController sections] objectAtIndex:section] numberOfObjects];
+    int numObjects = [[[self.fetchedResultsController sections] objectAtIndex:section] numberOfObjects];
+    return numObjects;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

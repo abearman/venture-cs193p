@@ -23,9 +23,9 @@
 -(void)associateFacebook:(NSString*)fuid;
 -(void)submitAdventure:(NSDictionary *)adventure;
 -(void)getGroups:(void (^)(NSMutableDictionary *))callback;
--(void)createGroup:(NSString*)groupName;
+-(void)createGroup:(NSString*)groupName withUserName:(NSString *)userName;
 -(void)sendMessage:(NSString*)message toGroup:(NSString*)groupName;
--(void)addAddressBookFriend:(NSString*)phone toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback;
--(void)addFacebookFriend:(NSString*)fbid toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback;
+-(void)addAddressBookFriend:(NSString*)phone withName:(NSString *)name toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback;
+-(void)addFacebookFriend:(NSString*)fbid withName:(NSString *)name toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback;
 
 @end

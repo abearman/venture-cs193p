@@ -49,13 +49,19 @@
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *phoneNumber = [defaults stringForKey:@"phone"];
-
+    NSString *name = [defaults stringForKey:@"name"];
+    
     if (phoneNumber == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Phone Number" message:@"Enter your phone number" delegate:self cancelButtonTitle:@"Leave" otherButtonTitles:@"Submit", nil];
         alert.alertViewStyle = UIAlertViewStylePlainTextInput;
         [alert show];
     }
-    
+    else if (name == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Name" message:@"Enter your name" delegate:self cancelButtonTitle:@"Leave" otherButtonTitles:@"Submit", nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert show];
+    }
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(createGroup:)
                                                  name:@"CreateGroup"
@@ -76,17 +82,112 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSLog(@"%i",buttonIndex);
-    NSString *phone = [alertView textFieldAtIndex:0].text;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:phone forKey:@"phone"];
-    [self.serverLayer associatePhone:phone];
+    if ([alertView.title isEqualToString:@"Phone Number"]) {
+        NSString *phone = [alertView textFieldAtIndex:0].text;
+        [defaults setObject:phone forKey:@"phone"];
+        [self.serverLayer associatePhone:phone];
+        NSString *name = [defaults stringForKey:@"name"];
+        if (name == nil) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Name" message:@"Enter your name" delegate:self cancelButtonTitle:@"Leave" otherButtonTitles:@"Submit", nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            [alert show];
+        }
+    }
+    else if ([alertView.title isEqualToString:@"Name"]) {
+        NSString *name = [alertView textFieldAtIndex:0].text;
+        [defaults setObject:name forKey:@"name"];
+    }
 }
 
+- (BOOL) set: (NSMutableSet *)set containsUserName: (NSString *)name {
+    for (Person *person in set) {
+        if ([person.name isEqualToString:name]) return true;
+    }
+    return false;
+}
+
+- (BOOL) group:(Group *)group containsMessageText:(NSString *)messageText withSender:(NSString *)senderName withDate:(NSDate *)date {
+    for (Message *message in group.messages) {
+        if ([messageText isEqualToString:message.message] &&
+            [senderName isEqualToString:message.sender.name] &&
+            [date isEqualToDate:message.timestamp]) return true;
+    }
+    return false;
+}
 
 - (void) updateChatView {
     [self.serverLayer getGroups:^(NSMutableDictionary *groupData) {
-        // TODO: Update views with group data
         NSLog(@"%@",groupData);
+        NSArray *groups = [groupData objectForKey:@"groups"];
+        for (NSDictionary *group in groups) {
+            NSString *groupName = [group objectForKey:@"name"];
+            
+            // Creates the Group object (or gets it from Core Data if it already exists)
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+            request.predicate = [NSPredicate predicateWithFormat:@"name = %@", groupName];
+            NSError *error1;
+            NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error1];
+            
+            Group *groupObject;
+            if ([groups count]) {
+                groupObject = [groups firstObject];
+            } else {
+                groupObject = [NSEntityDescription insertNewObjectForEntityForName:@"Group" inManagedObjectContext:self.managedObjectContext];
+                groupObject.name = groupName;
+            }
+            
+            NSMutableDictionary *uidToNameMapping = [[NSMutableDictionary alloc] init];
+            NSMutableSet *membersMutableSet = [[NSMutableSet alloc] initWithSet:groupObject.members];
+            
+            NSArray *users = [group objectForKey:@"members"];
+            for (NSDictionary *user in users) {
+                NSString *uid = [user objectForKey:@"uid"];
+                NSString *name = [user objectForKey:@"name"];
+                
+                // Insert name into Core Data as user
+                if (![self set:membersMutableSet containsUserName:name]) {
+                    // Create the Person object to add to the Group
+                    Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
+                    person.name = name;
+                    person.groups = [[NSSet alloc] initWithObjects:groupObject, nil];
+                }
+                
+                [uidToNameMapping setObject:name forKey:uid];
+            }
+            
+            NSArray *messages = [group objectForKey:@"messages"];
+            
+            for (NSDictionary *message in messages) {
+                NSString *senderUid = [message objectForKey:@"user"];
+                NSString *messageText = [message objectForKey:@"message"];
+                NSString *senderName = [uidToNameMapping objectForKey:senderUid];
+                long long msSince1970 = [((NSString*)[message objectForKey:@"time"]) longLongValue];
+                NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:msSince1970/1000];
+                
+                if (![self group:groupObject containsMessageText:messageText withSender:senderName withDate:date]) {
+                    // Insert message into Core Data
+                    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
+                    message.message = messageText;
+                    message.timestamp = date;
+                    message.group = groupObject;
+                    
+                    // Get the sender Person
+                    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Person"];
+                    request.predicate = [NSPredicate predicateWithFormat:@"name = %@", senderName];
+                    NSError *error1;
+                    NSArray *people = [self.managedObjectContext executeFetchRequest:request error:&error1];
+                    message.sender = [people firstObject];
+                }
+            }
+            
+            NSError *error;
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+            } else {
+                NSLog(@"Successfully saved Group from JSON with name %@", groupObject.name);
+            }
+        }
     }];
 }
 
@@ -197,7 +298,7 @@
     } else {
         NSLog(@"Successfully saved Person with name %@", person.name);
         if (phoneNumber != nil) {
-            [self.serverLayer addAddressBookFriend:phoneNumber toGroup:groupName successFailureCallback:^(BOOL success) {
+            [self.serverLayer addAddressBookFriend:phoneNumber withName:person.name toGroup:groupName successFailureCallback:^(BOOL success) {
                 if (!success) {
                     // TODO: Send text message dialog: "You're invited to download Venture!"
                 }
@@ -266,7 +367,9 @@
         self.groupName.text = group.name;
         self.groupName.enabled = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:group.name];
+        
         // Load group conversation
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MessagesChangedGroup" object:group.name];
     }
 }
 
@@ -280,6 +383,7 @@
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersChangedGroup" object:self.groupName.text];
         // Load group conversation
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MessagesChangedGroup" object:self.groupName.text];
     }
 }
 
@@ -302,7 +406,9 @@
         NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
     } else {
         NSLog(@"Successfully saved group with name %@", group.name);
-        [self.serverLayer createGroup:name];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *userName = [defaults stringForKey:@"name"];
+        [self.serverLayer createGroup:name withUserName:userName];
     }
 }
 
@@ -421,23 +527,27 @@
     
     // Get the Group to add the message to
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
-    request.predicate = [NSPredicate predicateWithFormat:@"name = %@", self.groupName];
+    request.predicate = [NSPredicate predicateWithFormat:@"name = %@", self.groupName.text];
     NSError *error1;
     NSArray *groups = [self.managedObjectContext executeFetchRequest:request error:&error1];
+    Group *group = [groups firstObject];
     
     // Create the Message object to add to the Group
-    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
+    /*Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
     message.message = self.messageTextField.text;
     // message.sender =
     message.timestamp = [NSDate date];
-    // message.group = [groups firstObject];
+    message.group = group;
     
     NSError *error2;
     if (![self.managedObjectContext save:&error2]) {
         NSLog(@"Whoops, couldn't save: %@", [error2 localizedDescription]);
     } else {
         NSLog(@"Successfully saved Message with message %@", message.message);
-    }
+    }*/
+    
+    [self.serverLayer sendMessage:self.messageTextField.text toGroup:group.name];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:@"MessagesChangedGroup" object:nil];
 }
 
 @end

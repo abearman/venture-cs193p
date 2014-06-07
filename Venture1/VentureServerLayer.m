@@ -52,26 +52,28 @@
     [self makeCallToVentureServer:@"/user-groups" callback:callback];
 }
 
--(void)createGroup:(NSString*)groupName {
+-(void)createGroup:(NSString*)groupName withUserName:(NSString *)userName {
     NSDictionary *data = @{
-        @"group" : groupName
-    };
+                           @"group" : groupName,
+                           @"name" : userName
+                           };
     [self makeCallToVentureServer:@"/create-group" additionalData:data];
 }
 
 -(void)sendMessage:(NSString*)message toGroup:(NSString*)groupName {
     NSDictionary *data = @{
-        @"group" : groupName,
-        @"message" : message
-    };
+                           @"group" : groupName,
+                           @"message" : message
+                           };
     [self makeCallToVentureServer:@"/chat" additionalData:data];
 }
 
--(void)addFacebookFriend:(NSString*)fbid toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback {
+-(void)addFacebookFriend:(NSString*)fbid withName:(NSString *)name toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback {
     NSDictionary *data = @{
-        @"group" : groupName,
-        @"fbid" : fbid
-    };
+                           @"group" : groupName,
+                           @"fbid" : fbid,
+                           @"name" : name
+                           };
     [self makeCallToVentureServer:@"/add-facebook-friend" additionalData:data callback:^(NSMutableDictionary *response) {
         if ([response objectForKey:@"status"] != nil && [[response objectForKey:@"status"] isEqualToString:@"success"]) {
             callback(true);
@@ -80,11 +82,12 @@
     }];
 }
 
--(void)addAddressBookFriend:(NSString*)phone toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback {
+-(void)addAddressBookFriend:(NSString*)phone withName:(NSString *)name toGroup:(NSString*)groupName successFailureCallback:(void (^)(BOOL))callback {
     NSDictionary *data = @{
-            @"group" : groupName,
-            @"phone" : phone
-    };
+                           @"group" : groupName,
+                           @"phone" : phone,
+                           @"name" : name
+                           };
     [self makeCallToVentureServer:@"/add-addressbook-friend" additionalData:data callback:^(NSMutableDictionary *response) {
         if ([response objectForKey:@"status"] != nil && [[response objectForKey:@"status"] isEqualToString:@"success"]) {
             callback(true);
@@ -105,30 +108,30 @@
 
 -(void)rateAdventure:(int)adventureId rating:(int)rating {
     NSDictionary *data = @{
-            @"adventure_id" : [NSString stringWithFormat:@"%i",adventureId],
-            @"rating" : [NSString stringWithFormat:@"%i",rating],
-    };
+                           @"adventure_id" : [NSString stringWithFormat:@"%i",adventureId],
+                           @"rating" : [NSString stringWithFormat:@"%i",rating],
+                           };
     [self makeCallToVentureServer:@"/rate-adventure" additionalData:data];
 }
 
 -(void)associateFacebook:(NSString*)fb_uid {
     NSDictionary *data = @{
-            @"fb_uid" : fb_uid
-    };
+                           @"fb_uid" : fb_uid
+                           };
     [self makeCallToVentureServer:@"/associate-facebook" additionalData:data];
 }
 
 -(void)associatePhone:(NSString*)phone {
     NSDictionary *data = @{
-            @"phone" : phone
-    };
+                           @"phone" : phone
+                           };
     [self makeCallToVentureServer:@"/associate-phone" additionalData:data];
 }
 
 -(void)submitAdventure:(NSDictionary *)adventure {
     NSDictionary *data = @{
-            @"adventure" : adventure
-    };
+                           @"adventure" : adventure
+                           };
     [self makeCallToVentureServer:@"/submit-adventure" additionalData:data];
 }
 
@@ -152,19 +155,19 @@
     [serverData setValue:[[[UIDevice currentDevice] identifierForVendor] UUIDString] forKey:@"uid"];
     [serverData setValue:tracker.lat forKey:@"lat"];
     [serverData setValue:tracker.lng forKey:@"lng"];
-
+    
     NSString *url = [NSString stringWithFormat:@"%@%@", SERVER_BASE_URL, uri];
     NSLog(@"URL: %@",url);
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"text/json" forHTTPHeaderField:@"Content-Type"];
-
+    
     NSError *jsonError;
     [request setHTTPBody:[NSJSONSerialization dataWithJSONObject:serverData options:0 error:&jsonError]];
-
+    
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
-
+    
     [[session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
         if (!error) {
             NSData* data = [NSData dataWithContentsOfURL:location];

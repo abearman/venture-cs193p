@@ -458,7 +458,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <connections>
-                                            <segue destination="sZK-mK-FFX" kind="embed" id="9ms-Hk-qY3"/>
+                                            <segue destination="nGG-my-qAs" kind="embed" id="RQh-XG-21R"/>
                                         </connections>
                                     </containerView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UrR-gu-eVZ" userLabel="Add Members View">
@@ -579,7 +579,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="nJ4-E9-I02">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" image="200354B6-17AC-40F5-ADBF-013FE41A74B8" id="fsV-Dj-2EC">
+                        <barButtonItem key="leftBarButtonItem" image="8CA3B6E3-265F-4B50-9F4D-4F589D1742F1" id="fsV-Dj-2EC">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Create Group" textAlignment="center" minimumFontSize="17" id="fmz-dY-xH5">
@@ -691,7 +691,7 @@
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="DLc-PT-dlg" id="kCh-HB-cMU"/>
+                            <outlet property="dataSource" destination="DLc-PT-dlg" id="hJ9-4A-6lz"/>
                             <outlet property="delegate" destination="DLc-PT-dlg" id="GP5-dt-HWJ"/>
                         </connections>
                     </tableView>
@@ -700,30 +700,30 @@
             </objects>
             <point key="canvasLocation" x="-682" y="-473"/>
         </scene>
-        <!--Table View Controller-->
-        <scene sceneID="uoI-Ki-Lxw">
+        <!--Group MessagingTVC-->
+        <scene sceneID="bIe-FP-mao">
             <objects>
-                <tableViewController id="sZK-mK-FFX" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Y0w-iF-CGM">
+                <tableViewController id="nGG-my-qAs" customClass="GroupMessagingTVC" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="HiE-9e-kdN">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="406"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Message Cell" textLabel="pts-gi-7QU" detailTextLabel="3IA-td-S77" style="IBUITableViewCellStyleSubtitle" id="vrz-bc-0ED">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Person Cell" textLabel="aww-3j-Unb" detailTextLabel="sp1-jn-7bj" style="IBUITableViewCellStyleSubtitle" id="SWt-xr-Jps">
+                                <rect key="frame" x="0.0" y="55" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vrz-bc-0ED" id="dTk-ot-2c3">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SWt-xr-Jps" id="qO2-TE-g26">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="pts-gi-7QU">
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aww-3j-Unb">
                                             <rect key="frame" x="15" y="3" width="34" height="22"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3IA-td-S77">
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="sp1-jn-7bj">
                                             <rect key="frame" x="15" y="25" width="43" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -735,14 +735,14 @@
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="sZK-mK-FFX" id="amn-BR-f5o"/>
-                            <outlet property="delegate" destination="sZK-mK-FFX" id="8IM-LF-s2h"/>
+                            <outlet property="dataSource" destination="nGG-my-qAs" id="eb5-AN-Uva"/>
+                            <outlet property="delegate" destination="nGG-my-qAs" id="xS6-PK-axQ"/>
                         </connections>
                     </tableView>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="z1J-0T-Stw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nxa-WK-YD0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1744" y="477"/>
+            <point key="canvasLocation" x="-1686" y="211"/>
         </scene>
         <!--Facebook LoginVC-->
         <scene sceneID="S98-gU-eEH">
@@ -791,7 +791,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="200354B6-17AC-40F5-ADBF-013FE41A74B8" width="32" height="32">
+        <image name="8CA3B6E3-265F-4B50-9F4D-4F589D1742F1" width="32" height="32">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPj9YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQsLzI4O1UkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
